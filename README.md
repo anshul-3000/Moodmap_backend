@@ -73,9 +73,9 @@ Runs on: http://localhost:5000
 ```
 
 ### 🚀 Deployment
-✅ Backend not deployed on cloud due to webcam hardware access limitation.
-🔄 All webcam detection is handled locally.
-🌐 Frontend is hosted live and calls local backend.
+- ✅ Backend not deployed on cloud due to webcam hardware access limitation.
+- 🔄 All webcam detection is handled locally.
+- 🌐 Frontend is hosted live and calls local backend.
 
 ### 🤝 Frontend Repository
 [🔗 MoodMap Frontend GitHub](https://github.com/anshul-3000/Moodmap_frontend)

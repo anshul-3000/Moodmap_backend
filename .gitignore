@@ -1,0 +1,17 @@
+# Python virtual environments
+venv/
+env/
+moodmap-env/
+
+# Compiled files
+__pycache__/
+*.pyc
+
+# Binaries
+*.pyd
+*.dll
+*.h5
+
+# Others
+.DS_Store
+.vscode/

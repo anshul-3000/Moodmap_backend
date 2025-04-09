@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #6a0dad; /* Purple background color */
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 90%;
+            width: 600px; /* Fixed width to maintain consistency */
+            overflow: hidden;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%; /* Scale image to fit within container width */
+            max-height: 400px; /* Set a maximum height to prevent oversized images */
+            height: auto;
+            display: block; /* Remove any extra space below the image */
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload an Image for Emotion Detection</h1>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" id="fileInput" required>
+            <button type="submit">Detect</button>
+        </form>
+        <div id="message" class="message"></div>
+        <img id="uploadedImage" src="" alt="Uploaded Image" style="display: none;">
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const uploadedImage = document.getElementById('uploadedImage');
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block'; // Show the image
+                }
+                
+                reader.readAsDataURL(file);
+                
+                // Reset the message and hide the previous image
+                document.getElementById('message').innerText = '';
+                document.getElementById('uploadedImage').style.display = 'none';
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+            const formData = new FormData(this);
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Display the response message
+                document.getElementById('message').innerText = data;
+                
+                // Update or clear the image source based on response
+                const uploadedImage = document.getElementById('uploadedImage');
+                if (data.includes('Detected Emotion')) {
+                    uploadedImage.src = '/static/uploaded_image.jpg?' + new Date().getTime(); // Add a timestamp to avoid caching issues
+                    uploadedImage.style.display = 'block'; // Show the updated image
+                } else {
+                    uploadedImage.src = ''; // Clear image if not detected
+                    uploadedImage.style.display = 'none'; // Hide the image
+                }
+            })
+            .catch(error => {
+                document.getElementById('message').innerText = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+cd D:\Moodmap\backend
+moodmap-env\Scripts\activate
+python app.py
